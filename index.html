@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Trivia Finanzas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>PARCIAL ANALISIS FINANCIERO</h1>
+    
+    <div id="scoreboard">
+      <p>Preguntas restantes: <span id="remaining"></span></p>
+    </div>
+
+    <div id="question-box">
+      <h2 id="question-text"></h2>
+      <div id="options"></div>
+    </div>
+
+    <div class="controls">
+      <button id="confirm">Confirmar Respuesta</button>
+      <button id="skip">Saltar</button>
+      <button id="reset">Reiniciar</button>
+    </div>
+
+    <div id="feedback"></div>
+  </div>
+
+  <script>
+    // 👉 Las 47 preguntas completas
+    const questions = [
+      {question:"1. El costo de oportunidad es la tasa de rendimiento sobre la mejor alternativa de inversión disponible.", options:["Verdadero","Falso"], correct:0},
+      {question:"2. En compañías pequeñas, el departamento de ventas realiza por lo general la función de finanzas.", options:["Verdadero","Falso"], correct:1},
+      {question:"3. Este sector se compone del comercio exterior y presenta un déficit estructural...", options:["Sector primario","Sector secundario","Sector terciario","Sector financiero"], correct:2},
+      {question:"4. Una de las funciones del contador es declarar y pagar impuestos.", options:["Verdadero","Falso"], correct:0},
+      {question:"5. Las finanzas son importantes porque nos sirven para aprovechar las oportunidades.", options:["Verdadero","Falso"], correct:0},
+      {question:"6. Una de las áreas en que puede desglosarse la función de decisión de la administración financiera es:", options:["Administración de bienes","Contabilidad fiscal","Recursos humanos","Producción y logística"], correct:0},
+      {question:"7. La meta principal de los administradores financieros es:", options:["Minimizar costos","Maximizar la riqueza de los dueños de la empresa","Aumentar liquidez","Reducir riesgos"], correct:1},
+      {question:"8. Dentro de los campos de estudio de la administración financiera se incluyen:", options:["Análisis financiero, administración de corto plazo, presupuestos de capital o inversión, estructura de capital o financiamiento","Contabilidad, mercadeo, recursos humanos, logística","Auditoría, comercio exterior, economía","Ventas, costos, innovación, logística"], correct:0},
+      {question:"9. El presupuesto de capital da seguimiento a la ejecución de las inversiones evaluadas.", options:["Verdadero","Falso"], correct:1},
+      {question:"10. El gerente general analiza sobre todo los flujos de efectivo.", options:["Verdadero","Falso"], correct:1},
+      {question:"11. La tasa de interés es el precio del uso del dinero.", options:["Verdadero","Falso"], correct:0},
+      {question:"12. La administración de corto plazo trata de saber si el activo circulante es superior al pasivo circulante.", options:["Verdadero","Falso"], correct:0},
+      {question:"13. Este informe presenta saldo inicial, cambios y saldo final de utilidades acumuladas.", options:["Estado de situación financiera","Estado de utilidades retenidas","Estado de flujo de efectivo","Estado de resultados"], correct:1},
+      {question:"14. Cuando aumentan los beneficios en una inversión el riesgo generalmente baja.", options:["Verdadero","Falso"], correct:1},
+      {question:"15. La administración financiera se refiere a las tareas del gerente financiero.", options:["Verdadero","Falso"], correct:0},
+      {question:"16. Este informe es una herramienta para ver empresas rentables y autofinanciadas.", options:["Estado de uso de fondos","Estado de flujo de efectivo","Estado de resultados","Balance general"], correct:0},
+      {question:"17. Una desventaja de la forma de organización denominada ASOCIACIÓN es:", options:["Altos costos de constitución","Dificultad para liquidar o transferir","Escasa confianza","Falta de financiamiento"], correct:1},
+      {question:"18. Las finanzas son importantes porque nos sirven para realizar negocios.", options:["Verdadero","Falso"], correct:0},
+      {question:"19. Riesgo derivado de que una parte no cumpla pagos en un contrato financiero.", options:["Riesgo de mercado","Riesgo de crédito","Riesgo de liquidez","Riesgo país"], correct:1},
+      {question:"20. Riesgo cuando no se pueden comprar/vender activos aun queriendo hacerlo.", options:["Riesgo de crédito","Riesgo de liquidez","Riesgo de mercado","Riesgo operativo"], correct:1},
+      {question:"21. Ventaja de las PERSONAS FÍSICAS:", options:["Alta facilidad de financiamiento","Costos de organización reducidos","Separación propiedad-control","Limitación de responsabilidad"], correct:1},
+      {question:"22. En diversificación, el empleo de deuda aumenta utilidades de una empresa.", options:["Verdadero","Falso"], correct:1},
+      {question:"23. El costo de oportunidad es la tasa de rendimiento sobre la mejor alternativa de inversión disponible.", options:["Verdadero","Falso"], correct:0},
+      {question:"24. La meta principal de los administradores financieros es:", options:["Verdadero","Falso"], correct:0},
+      {question:"26. Una desventaja de la forma de organización PERSONAS FÍSICAS es:", options:["Verdadero","Falso"], correct:0},
+      {question:"27. Tipo de riesgo: probabilidad de que el valor de una cartera se reduzca.", options:["Riesgo de crédito","Riesgo de mercado","Riesgo de liquidez","Riesgo operativo"], correct:1},
+      {question:"28. Una desventaja de la forma de organización CORPORACIÓN es:", options:["Verdadero","Falso"], correct:0},
+      {question:"29. Si me ofrecen $1000 ahora o en un año, elijo ahora porque el dinero gana valor.", options:["Verdadero","Falso"], correct:0},
+      {question:"31. En compañías pequeñas, el departamento de ventas realiza la función de finanzas.", options:["Verdadero","Falso"], correct:1},
+      {question:"32. Lo más importante para el accionista:", options:["El precio por acción","El valor contable","Las utilidades retenidas","El flujo de efectivo"], correct:0},
+      {question:"35. El precio de la acción no depende del siguiente factor.", options:["Verdadero","Falso"], correct:0},
+      {question:"36. El gerente financiero evalúa rendimientos y riesgos, aceptando solo los que aumentan valor.", options:["Verdadero","Falso"], correct:0},
+      {question:"38. Cuando aumentan beneficios de una inversión el riesgo generalmente sube.", options:["Verdadero","Falso"], correct:1},
+      {question:"40. Una función del gerente financiero es cumplir con informes regulatorios.", options:["Verdadero","Falso"], correct:1},
+      {question:"41. Este sector se ha basado en la exportación de textiles.", options:["Sector primario","Sector secundario","Sector terciario","Sector servicios"], correct:1},
+      {question:"42. El gerente financiero evalúa precios y duración de inversiones.", options:["Verdadero","Falso"], correct:1},
+      {question:"43. El costo de capital es la tasa de rendimiento sobre la mejor alternativa de inversión disponible.", options:["Verdadero","Falso"], correct:1},
+      {question:"44. La administración de corto plazo analiza si el activo circulante es inferior al pasivo circulante.", options:["Verdadero","Falso"], correct:1},
+      {question:"45. En compañías pequeñas el departamento de contabilidad realiza por lo general la función de finanzas.", options:["Verdadero","Falso"], correct:0},
+      {question:"46. El presupuesto de capital da seguimiento a la ejecución de inversiones aprobadas.", options:["Verdadero","Falso"], correct:0},
+      {question:"47. Este sector se compone del comercio exterior y presenta déficit estructural...", options:["Sector primario","Sector secundario","Sector terciario","Sector financiero"], correct:2}
+    ];
+
+    let questionQueue = [...questions];
+    let selectedOption = null;
+
+    const questionText = document.getElementById("question-text");
+    const optionsBox = document.getElementById("options");
+    const feedback = document.getElementById("feedback");
+    const remaining = document.getElementById("remaining");
+
+    function loadQuestion() {
+      if (questionQueue.length === 0) {
+        questionText.textContent = "🎉 ¡Felicidades! Has completado todas las preguntas.";
+        optionsBox.innerHTML = "";
+        remaining.textContent = "0";
+        return;
+      }
+      selectedOption = null;
+      const q = questionQueue[0];
+      questionText.textContent = q.question;
+      optionsBox.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-btn";
+        btn.onclick = () => selectOption(i, btn);
+        optionsBox.appendChild(btn);
+      });
+      remaining.textContent = questionQueue.length;
+      feedback.textContent = "";
+    }
+
+    function selectOption(index, btn) {
+      selectedOption = index;
+      document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    }
+
+    document.getElementById("confirm").onclick = () => {
+      if (selectedOption === null) {
+        feedback.textContent = "⚠️ Selecciona una respuesta.";
+        return;
+      }
+      const q = questionQueue[0];
+      if (selectedOption === q.correct) {
+        feedback.textContent = "✅ ¡Correcto!";
+        questionQueue.shift();
+      } else {
+        feedback.textContent = `❌ Incorrecto. Respuesta correcta: ${q.options[q.correct]}`;
+        questionQueue.push(questionQueue.shift());
+      }
+      setTimeout(loadQuestion, 1500);
+    };
+
+    document.getElementById("skip").onclick = () => {
+      questionQueue.push(questionQueue.shift());
+      loadQuestion();
+    };
+
+    document.getElementById("reset").onclick = () => {
+      questionQueue = [...questions];
+      loadQuestion();
+    };
+
+    loadQuestion();
+  </script>
+</body>
+</html>
